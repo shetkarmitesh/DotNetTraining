@@ -90,7 +90,7 @@ namespace Assignment2
             foreach (Item item in items)
             {
                 Console.WriteLine($"{index,-8} {item.itemID,-10} {item.itemName,-20} {item.itemPrice,-10} {item.itemQuantity,-10}");
-                index++;
+                index++;  
             }
             
         }
