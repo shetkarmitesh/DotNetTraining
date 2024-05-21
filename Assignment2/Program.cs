@@ -50,7 +50,7 @@ namespace Assignment2
                         
                         return;
                     default:
-                        Console.WriteLine("Invalid choice.  Please enter a number between 1 and 6. ");
+                        Console.WriteLine("Invalid choice. Please enter a number between 1 and 6. ");
                         break;
                 }
             }
@@ -85,10 +85,11 @@ namespace Assignment2
 
             Console.WriteLine("***** Items List *****");
             int index = 1;
-
+            Console.WriteLine("{0,-8} {1,-10} {2,-20} {3,-10} {4,-10}", "Index", "Item ID", "Name","Price","Quantity");
+            Console.WriteLine("-------  --------------  -------------------- -------------- --------------");
             foreach (Item item in items)
             {
-                Console.WriteLine($"{index}. {item.itemID} {item.itemName} {item.itemPrice} {item.itemQuantity}");
+                Console.WriteLine($"{index,-8} {item.itemID,-10} {item.itemName,-20} {item.itemPrice,-10} {item.itemQuantity,-10}");
                 index++;
             }
             
@@ -99,7 +100,10 @@ namespace Assignment2
             if (itemDetails != null)
             {
                 Console.WriteLine("***** Items List *****");
-                Console.WriteLine($"{itemDetails.itemID} {itemDetails.itemName} {itemDetails.itemPrice} {itemDetails.itemQuantity}");
+                Console.WriteLine("{0,-8} {1,-10} {2,-20} {3,-10} {4,-10}", "Index", "Item ID", "Name", "Price", "Quantity");
+                Console.WriteLine("------  ---------- -------------------- ---------- ---------- ");
+                Console.WriteLine($"{"1",-8} {itemDetails.itemID,-10} {itemDetails.itemName,-20} {itemDetails.itemPrice,-10} {itemDetails.itemQuantity,-10}");
+
                 return itemDetails;
             }
             else
