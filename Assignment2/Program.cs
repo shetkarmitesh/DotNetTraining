@@ -9,7 +9,6 @@ namespace Assignment2
 {
     internal class Program
     {
-        static List<Item> items = new List<Item>();
         static void Main(string[] args)
         {
             Inventory inventory = new Inventory();
