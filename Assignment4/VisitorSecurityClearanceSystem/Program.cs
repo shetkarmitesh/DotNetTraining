@@ -1,3 +1,6 @@
+using VisitorSecurityClearanceSystem.Interfaces;
+using VisitorSecurityClearanceSystem.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+//dependencies injection
+builder.Services.AddScoped<IManagerService, ManagerService>();
+builder.Services.AddScoped<IOfficeService, OfficeService>();
+builder.Services.AddScoped<ISecurityService, SecurityService>();
+builder.Services.AddScoped<IVisitorService, VisitorService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
