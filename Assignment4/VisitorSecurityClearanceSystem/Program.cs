@@ -1,3 +1,5 @@
+using VisitorSecurityClearanceSystem.Common;
+using VisitorSecurityClearanceSystem.CosmosDB;
 using VisitorSecurityClearanceSystem.Interfaces;
 using VisitorSecurityClearanceSystem.Services;
 
@@ -15,6 +17,8 @@ builder.Services.AddScoped<IManagerService, ManagerService>();
 builder.Services.AddScoped<IOfficeService, OfficeService>();
 builder.Services.AddScoped<ISecurityService, SecurityService>();
 builder.Services.AddScoped<IVisitorService, VisitorService>();
+builder.Services.AddScoped<ICosmosDBServices, CosmosDBServices>();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

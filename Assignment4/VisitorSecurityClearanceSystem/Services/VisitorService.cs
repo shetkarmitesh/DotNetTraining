@@ -46,7 +46,7 @@ namespace VisitorSecurityClearanceSystem.Services
             }
             return visitorDTOs;
         }
-        public async Task<VisitorDTO> GetVisitorByUId(string UId)
+        public async Task<VisitorDTO> GetVisitorById(string UId)
         {
             var visitor = await _cosmosDBServices.GetVisitorById(UId);
             

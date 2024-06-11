@@ -1,8 +1,9 @@
 ﻿using Newtonsoft.Json;
+using VisitorSecurityClearanceSystem.Common;
 
 namespace VisitorSecurityClearanceSystem.Entities
 {
-    public class ManagerEntity
+    public class ManagerEntity :BaseEntity
     {
         [JsonProperty(PropertyName = "id", NullValueHandling = NullValueHandling.Ignore)]
         public string Id { get; set; }

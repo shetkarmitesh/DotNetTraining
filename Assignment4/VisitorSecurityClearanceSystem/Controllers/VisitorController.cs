@@ -4,10 +4,11 @@ using VisitorSecurityClearanceSystem.Interfaces;
 
 namespace VisitorSecurityClearanceSystem.Controllers
 {
+    [Route("api/[Controller]/[Action]")]
+    [ApiController]
     public class VisitorController : Controller
     {
-        [ApiController]
-        [Route("api/[Controller]/[Action]")]
+        
         private readonly IVisitorService _visitorService;
         public VisitorController(IVisitorService visitorService)
         {
@@ -28,15 +29,15 @@ namespace VisitorSecurityClearanceSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<VisitorDTO> GetVisitorByUId(string UId)
+        public async Task<VisitorDTO> GetVisitorById(string UId)
         {
-            var response = await _visitorService.GetVisitorByUId(UId);
+            var response = await _visitorService.GetVisitorById(UId);
             return response;
         }
         [HttpPost]
-        public async Task<VisitorDTO> UpdateVisitor(VisitorDTO visitorDTO)
+        public async Task<VisitorDTO> UpdateVisitor(string id, VisitorDTO visitorDTO)
         {
-            var response = await _visitorService.UpdateVisitor(visitorDTO);
+            var response = await _visitorService.UpdateVisitor(id, visitorDTO);
             return response;
         }
         [HttpDelete]

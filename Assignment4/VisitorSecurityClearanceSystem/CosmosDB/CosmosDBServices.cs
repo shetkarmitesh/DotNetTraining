@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.Cosmos;
+﻿using Azure;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using VisitorSecurityClearanceSystem.Common;
 using VisitorSecurityClearanceSystem.Entities;
@@ -54,6 +55,76 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
             return visitors ;
         }
 
+
+
+        public async Task<ManagerEntity> AddManager(ManagerEntity managerEntity)
+        {
+            var response = await _container.CreateItemAsync<ManagerEntity>(managerEntity);
+            return response;
+        }
+        public async Task<ManagerEntity> UpdateManager(ManagerEntity managerEntity)
+        {
+            var response = await _container.UpsertItemAsync(managerEntity);
+            return response;
+        }
+        public async Task<ManagerEntity> GetManagerById(string id)
+        {
+                var response = _container.GetItemLinqQueryable<ManagerEntity>(true).Where(q => q.Id == id && q.Active && !q.Archived).FirstOrDefault();
+
+                return response;
+
+        }
+
+
+        public async Task<SecurityEntity> AddSecurityUser(SecurityEntity securityEntity)
+        {
+            var response = await _container.CreateItemAsync<SecurityEntity>(securityEntity);
+            return response;
+        }
+        public async Task<SecurityEntity> UpdateSecurityUser(SecurityEntity securityEntity)
+        {
+            var response = await _container.UpsertItemAsync(securityEntity);
+            return response;
+        }
+        public async Task<SecurityEntity> GetSecurityUserByEmail(string email)
+        {
+            var response = _container.GetItemLinqQueryable<SecurityEntity>(true).Where(q => q.Email == email && q.Active && !q.Archived).FirstOrDefault();
+
+            return response;
+        }
+        public async Task<SecurityEntity> GetSecurityById(string id)
+        {
+
+            var response = _container.GetItemLinqQueryable<SecurityEntity>(true).Where(q => q.Id == id && q.Active && !q.Archived).FirstOrDefault();
+                return response;
+           
+        }
+
+        public async Task<OfficeEntity> AddOfficeUser(OfficeEntity officeUserEntity)
+        {
+            var response = await _container.CreateItemAsync<OfficeEntity>(officeUserEntity);
+            return response;
+        }
+        public async Task<OfficeEntity> UpdateOfficeUser(OfficeEntity officeUserEntity)
+        {
+            var response = await _container.UpsertItemAsync(officeUserEntity);
+            return response;
+        }
+        public async Task<OfficeEntity> GetOfficeUserByEmail(string email)
+        {
+            var response = _container.GetItemLinqQueryable<OfficeEntity>(true).Where(q => q.Email == email && q.Active && !q.Archived).FirstOrDefault();
+
+            return response;
+        }
+        public async Task<OfficeEntity> GetOfficeById(string id)
+        {
+                
+            var query = _container.GetItemLinqQueryable<OfficeEntity>(true).Where(q => q.Id == id && q.Active && !q.Archived).FirstOrDefault();
+
+                return query;
+           
+           
+        }
 
     }
 }
