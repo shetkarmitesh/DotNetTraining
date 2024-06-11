@@ -32,21 +32,21 @@ namespace VisitorSecurityClearanceSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<VisitorDTO> GetVisitorById(string UId)
+        public async Task<VisitorDTO> GetVisitorByUId(string UId)
         {
-            var response = await _visitorService.GetVisitorById(UId);
+            var response = await _visitorService.GetVisitorByUId(UId);
             return response;
         }
         [HttpPost]
-        public async Task<VisitorDTO> UpdateVisitor(string id, VisitorDTO visitorDTO)
+        public async Task<VisitorDTO> UpdateVisitor(string uId, VisitorDTO visitorDTO)
         {
-            var response = await _visitorService.UpdateVisitor(id, visitorDTO);
+            var response = await _visitorService.UpdateVisitor(uId, visitorDTO);
             return response;
         }
         [HttpDelete]
-        public async Task<string> DeleteVisitor(string UId)
+        public async Task<string> DeleteVisitor(string uId)
         {
-            var response = await _visitorService.DeleteVisitor(UId);
+            var response = await _visitorService.DeleteVisitor(uId);
             return response;
         }
         private string GetStringFromCell(ExcelWorksheet worksheet, int row, int column)
@@ -78,7 +78,7 @@ namespace VisitorSecurityClearanceSystem.Controllers
                     {
                         var student = new VisitorDTO
                         {
-                            Id = GetStringFromCell(worksheet, row, 2),
+                            UId = GetStringFromCell(worksheet, row, 2),
                             Name = GetStringFromCell(worksheet, row, 3),
                             Email = GetStringFromCell(worksheet, row, 4),
                             Phone = GetStringFromCell(worksheet, row, 5),
@@ -126,7 +126,7 @@ namespace VisitorSecurityClearanceSystem.Controllers
                 var worksheet = package.Workbook.Worksheets.Add("Students");
 
                 // Add Header
-                worksheet.Cells[1, 1].Value = "Id";
+                worksheet.Cells[1, 1].Value = "UId";
                 worksheet.Cells[1, 2].Value = "Name";
                 worksheet.Cells[1, 3].Value = "Email";
                 worksheet.Cells[1, 4].Value = "Phone";
@@ -149,7 +149,7 @@ namespace VisitorSecurityClearanceSystem.Controllers
                 for (int i = 0; i < visitorList.Count; i++)
                 {
                     var student = visitorList[i];
-                    worksheet.Cells[i + 2, 1].Value = student.Id;
+                    worksheet.Cells[i + 2, 1].Value = student.UId;
                     worksheet.Cells[i + 2, 2].Value = student.Name;
                     worksheet.Cells[i + 2, 3].Value = student.Email;
                     worksheet.Cells[i + 2, 4].Value = student.Phone;

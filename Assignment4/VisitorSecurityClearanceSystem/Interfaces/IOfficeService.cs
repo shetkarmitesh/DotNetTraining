@@ -5,9 +5,9 @@ namespace VisitorSecurityClearanceSystem.Interfaces
     public interface IOfficeService
     {
         Task<OfficeDTO> AddOffice(OfficeDTO officeDTO);
-        Task<OfficeDTO> GetOfficeById(string id);
-        Task<OfficeDTO> UpdateOffice(string id, OfficeDTO officeDTO);
-        Task<string> DeleteOffice(string id);
+        Task<OfficeDTO> GetOfficeByUId(string uId);
+        Task<OfficeDTO> UpdateOffice(string uId, OfficeDTO officeDTO);
+        Task<string> DeleteOffice(string uId);
 
         Task<OfficeDTO> LoginOfficeUser(string email, string password);
     }

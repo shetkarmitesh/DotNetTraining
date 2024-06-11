@@ -30,24 +30,24 @@ namespace VisitorSecurityClearanceSystem.Controllers
 
 
         [HttpGet]
-        public async Task<ManagerDTO> GetManagerById(string id)
+        public async Task<ManagerDTO> GetManagerByUId(string uId)
         {
-            return await _managerService.GetManagerById(id);
+            return await _managerService.GetManagerByUId(uId);
         }
 
         [HttpPost]
-        public async Task<ManagerDTO> UpdateManager(string id, ManagerDTO managerDTO)
+        public async Task<ManagerDTO> UpdateManager(string uId, ManagerDTO managerDTO)
         {
 
             
-                var updatedManager = await _managerService.UpdateManager(id, managerDTO);
+                var updatedManager = await _managerService.UpdateManager(uId, managerDTO);
                 return updatedManager;
            
         }
         [HttpDelete]
-        public async Task<string> DeleteManager(string id)
+        public async Task<string> DeleteManager(string uId)
         {
-            var response = await _managerService.DeleteManager(id);
+            var response = await _managerService.DeleteManager(uId);
             return response;
         }
 
@@ -67,10 +67,10 @@ namespace VisitorSecurityClearanceSystem.Controllers
         }
 
         [HttpPut]
-        public async Task<VisitorDTO> UpdateVisitorStatus(string visitorId, bool newStatus)
+        public async Task<VisitorDTO> UpdateVisitorStatus(string visitorUId, bool newStatus)
         {
             
-                var updatedVisitor = await _visitorService.UpdateVisitorStatus(visitorId, newStatus);
+                var updatedVisitor = await _visitorService.UpdateVisitorStatus(visitorUId, newStatus);
                 return updatedVisitor;
            
         }

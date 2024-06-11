@@ -4,8 +4,9 @@ namespace VisitorSecurityClearanceSystem.DTOs
 {
     public class ManagerDTO
     {
-        [JsonProperty("id")]
-        public string Id { get; set; }
+       
+        [JsonProperty("uId")]
+        public string UId { get; set; }
 
         [JsonProperty("name")]
         public string Name { get; set; }

@@ -20,9 +20,9 @@ namespace VisitorSecurityClearanceSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO loginModel)
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
-            var officeUser = await _officeService.LoginOfficeUser(loginModel.Email, loginModel.Password);
+            var officeUser = await _officeService.LoginOfficeUser(loginDTO.Email, loginDTO.Password);
             if (officeUser == null)
             {
                 return Unauthorized("Invalid credentials");
@@ -32,24 +32,24 @@ namespace VisitorSecurityClearanceSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<OfficeDTO> GetOfficeById(string id)
+        public async Task<OfficeDTO> GetOfficeByUId(string uId)
         {
-            return await _officeService.GetOfficeById(id);
+            return await _officeService.GetOfficeByUId(uId);
         }
 
         [HttpPut]
-        public async Task<OfficeDTO> UpdateOffice(string id, OfficeDTO securityModel)
+        public async Task<OfficeDTO> UpdateOffice(string uId, OfficeDTO securityDTO)
         {
             
-                var updatedSecurity = await _officeService.UpdateOffice(id, securityModel);
+                var updatedSecurity = await _officeService.UpdateOffice(uId, securityDTO);
                 return updatedSecurity;
         }
 
         [HttpPut]
-        public async Task<VisitorDTO> UpdateVisitorStatus(string visitorId, bool newStatus)
+        public async Task<VisitorDTO> UpdateVisitorStatus(string visitorUId, bool newStatus)
         {
             
-                var updatedVisitor = await _visitorService.UpdateVisitorStatus(visitorId, newStatus);
+                var updatedVisitor = await _visitorService.UpdateVisitorStatus(visitorUId, newStatus);
                 return updatedVisitor;  
         }
 
@@ -61,9 +61,9 @@ namespace VisitorSecurityClearanceSystem.Controllers
         }
 
         [HttpDelete]
-        public async Task<string> DeleteOffice(string id)
+        public async Task<string> DeleteOffice(string uId)
         {  
-            var response = await _officeService.DeleteOffice(id);
+            var response = await _officeService.DeleteOffice(uId);
             return response;
         }
         

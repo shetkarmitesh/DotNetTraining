@@ -17,11 +17,11 @@ namespace VisitorSecurityClearanceSystem.Services
             _cosmosDBServices = cosmosDBServices;
             _mapper = mapper;
         }
-        public async Task<ManagerDTO> AddManager(ManagerDTO managerModel)
+        public async Task<ManagerDTO> AddManager(ManagerDTO managerDTO)
         {
 
             // Map the DTO to an Entity
-            var managerEntity = _mapper.Map<ManagerEntity>(managerModel);
+            var managerEntity = _mapper.Map<ManagerEntity>(managerDTO);
 
             // Initialize the Entity
             managerEntity.Initialize(true, "manager", "Prerit", "Prerit");
@@ -33,29 +33,29 @@ namespace VisitorSecurityClearanceSystem.Services
             return _mapper.Map<ManagerDTO>(response);
         }
 
-        public async Task<ManagerDTO> GetManagerById(string id)
+        public async Task<ManagerDTO> GetManagerByUId(string uId)
         {
-            var security = await _cosmosDBServices.GetManagerById(id); // Call non-generic method
+            var security = await _cosmosDBServices.GetManagerByUId(uId); // Call non-generic method
             return _mapper.Map<ManagerDTO>(security);
         }
 
-        public async Task<ManagerDTO> UpdateManager(string id, ManagerDTO managerModel)
+        public async Task<ManagerDTO> UpdateManager(string uId, ManagerDTO managerDTO)
         {
-            var managerEntity = await _cosmosDBServices.GetManagerById(id);
+            var managerEntity = await _cosmosDBServices.GetManagerByUId(uId);
             if (managerEntity == null)
             {
                 throw new Exception("Manager not found");
             }
-            managerEntity = _mapper.Map<ManagerEntity>(managerModel);
-            managerEntity.Id = id;
+            managerEntity = _mapper.Map<ManagerEntity>(managerDTO);
+            managerEntity.UId = uId;
             var response = await _cosmosDBServices.UpdateManager(managerEntity);
             return _mapper.Map<ManagerDTO>(response);
         }
 
-        public async Task<string> DeleteManager(string id)
+        public async Task<string> DeleteManager(string uId)
         {
-            /* await _cosmosDBServices.DeleteManager(id);*/
-            var mangerToDelete = await _cosmosDBServices.GetManagerById(id);
+            /* await _cosmosDBServices.DeleteManager(uId);*/
+            var mangerToDelete = await _cosmosDBServices.GetManagerByUId(uId);
             mangerToDelete.Active = false;
             mangerToDelete.Archived = true;
             await _cosmosDBServices.UpdateManager(mangerToDelete);

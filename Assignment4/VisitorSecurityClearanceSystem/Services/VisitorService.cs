@@ -31,8 +31,6 @@ namespace VisitorSecurityClearanceSystem.Services
 
             var visitor = _mapper.Map<VisitorEntity>(visitorDTO);
             visitor.Initialize(true, Credentials.VisitorDocumnetType, "Admin", "Admin");
-            var response = await _cosmosDBServices.AddVisitor(visitor);
-
             //prepare email
             string subject = "Visitor Registration Approval Request";
             string toEmail = "tempvirajtapkir1800@gmail.com";  // Change to manager's email
@@ -51,6 +49,7 @@ namespace VisitorSecurityClearanceSystem.Services
             // Sending the email
             EmailSender emailSender = new EmailSender();
             await emailSender.SendEmail(subject, toEmail, userName, message);
+            var response = await _cosmosDBServices.AddVisitor(visitor);
 
 
             var responseDTO = _mapper.Map<VisitorDTO>(response);
@@ -63,15 +62,14 @@ namespace VisitorSecurityClearanceSystem.Services
             var visitorDTOs = new List<VisitorDTO>();
             foreach (var visitor in visitors)
             {
-               
                 var visitorDTO = _mapper.Map<VisitorDTO>(visitor);
                 visitorDTOs.Add(visitorDTO);
             }
             return visitorDTOs;
         }
-        public async Task<VisitorDTO> GetVisitorById(string UId)
+        public async Task<VisitorDTO> GetVisitorByUId(string uId)
         {
-            var visitor = await _cosmosDBServices.GetVisitorById(UId);
+            var visitor = await _cosmosDBServices.GetVisitorByUId(uId);
             
             var visitorDTO = _mapper.Map<VisitorDTO>(visitor);
             return visitorDTO;
@@ -91,22 +89,39 @@ namespace VisitorSecurityClearanceSystem.Services
         }
 
 
-        public async Task<VisitorDTO> UpdateVisitor(string id, VisitorDTO visitorModel)
+        public async Task<VisitorDTO> UpdateVisitor(string uId, VisitorDTO visitorDTO)
         {
-            var visitorEntity = await _cosmosDBServices.GetVisitorById(id);
+            var visitorEntity = await _cosmosDBServices.GetVisitorByUId(uId);
             if (visitorEntity == null)
             {
-                throw new Exception("Manager not found");
+                throw new Exception("Visitor not found");
             }
-            visitorEntity = _mapper.Map<VisitorEntity>(visitorModel); ;
-            visitorEntity.Id = id;
-            var response = await _cosmosDBServices.UpdateVisitor(visitorEntity);
+            visitorEntity.Active = false;
+            visitorEntity.Archived = true;
+            await _cosmosDBServices.ReplaceAsync(visitorEntity);
 
-            return _mapper.Map<VisitorDTO>(response);
+            visitorEntity.Initialize(false, Credentials.VisitorDocumnetType, "Admin", "Admin");
+            visitorEntity.UId=visitorDTO.UId;
+            visitorEntity.Name=visitorDTO.Name;
+            visitorEntity.Email=visitorDTO.Email;
+            visitorEntity.Phone=visitorDTO.Phone;
+            visitorEntity.PassStatus=visitorDTO.PassStatus;
+            visitorEntity.Address=visitorDTO.Address;
+            visitorEntity.Role=visitorDTO.Role;
+            visitorEntity.CompanyName=visitorDTO.CompanyName;
+            visitorEntity.Purpose=visitorDTO.Purpose;
+            visitorEntity.EntryTime=visitorDTO.EntryTime;
+            visitorEntity.ExitTime=visitorDTO.ExitTime;
+            //error in mapping
+            var response = await _cosmosDBServices.AddVisitor(visitorEntity);
+
+            var responseDTO = _mapper.Map<VisitorDTO>(response);
+            
+            return responseDTO;
         }
-        public async Task<VisitorDTO> UpdateVisitorStatus(string visitorId, bool newStatus)
+        public async Task<VisitorDTO> UpdateVisitorStatus(string visitorUId, bool newStatus)
         {
-            var visitor = await _cosmosDBServices.GetVisitorById(visitorId);
+            var visitor = await _cosmosDBServices.GetVisitorByUId(visitorUId);
             if (visitor == null)
             {
                 throw new Exception("Visitor not found");
@@ -139,20 +154,13 @@ namespace VisitorSecurityClearanceSystem.Services
             await emailSender.SendEmail(subject, toEmail, userName, message, pdfBytes);
 
             var response = _mapper.Map<VisitorDTO>(visitor); ;
-            /*return new VisitorDTO
-            {
-                Id = visitor.Id,
-                Name = visitor.Name,
-                Email = visitor.Email,
-                PassStatus = visitor.PassStatus,
-                // Map other properties as needed
-            };*/
+            
             return response;
         }
-        public async Task<string> DeleteVisitor(string id)
+        public async Task<string> DeleteVisitor(string uId)
         {
            /* await _cosmosDBServices.DeleteVisitor(id);*/
-            var visitorToDelete = await _cosmosDBServices.GetVisitorById(id);
+            var visitorToDelete = await _cosmosDBServices.GetVisitorByUId(uId);
             visitorToDelete.Active = false;
             visitorToDelete.Archived = true;
             await _cosmosDBServices.UpdateVisitor(visitorToDelete);

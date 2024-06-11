@@ -17,9 +17,9 @@ namespace VisitorSecurityClearanceSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO loginModel)
+        public async Task<IActionResult> Login(LoginDTO loginDTO)
         {
-            var securityUser = await _securityService.LoginSecurityUser(loginModel.Email, loginModel.Password);
+            var securityUser = await _securityService.LoginSecurityUser(loginDTO.Email, loginDTO.Password);
             if (securityUser == null)
             {
                 return Unauthorized("Invalid credentials");
@@ -36,32 +36,32 @@ namespace VisitorSecurityClearanceSystem.Controllers
         }
 
         [HttpGet]
-        public async Task<VisitorDTO> GetVisitorById(string id)
+        public async Task<VisitorDTO> GetVisitorByUId(string uId)
         {
-            return await _visitorService.GetVisitorById(id);
+            return await _visitorService.GetVisitorByUId(uId);
         }
 
 
 
         [HttpGet]
-        public async Task<SecurityDTO> GetSecurityById(string id)
+        public async Task<SecurityDTO> GetSecurityByUId(string uId)
         {
-            return await _securityService.GetSecurityById(id);
+            return await _securityService.GetSecurityByUId(uId);
         }
 
         [HttpPost]
-        public async Task<SecurityDTO> UpdateSecurity(string id, SecurityDTO securityModel)
+        public async Task<SecurityDTO> UpdateSecurity(string uId, SecurityDTO securityDTO)
         {
             
-                var updatedSecurity = await _securityService.UpdateSecurity(id, securityModel);
+                var updatedSecurity = await _securityService.UpdateSecurity(uId, securityDTO);
                 return updatedSecurity;
            
         }
 
         [HttpDelete]
-        public async Task<string> DeleteSecurity(string id)
+        public async Task<string> DeleteSecurity(string uId)
         {
-            var response = await _visitorService.DeleteVisitor(id);
+            var response = await _visitorService.DeleteVisitor(uId);
             return response;
         }
     }

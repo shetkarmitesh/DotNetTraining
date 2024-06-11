@@ -19,13 +19,13 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
         }
         public async Task<VisitorEntity> AddVisitor(VisitorEntity entity)
         {
-            var response = await _container.CreateItemAsync<VisitorEntity>(entity);
+            var response = await _container.CreateItemAsync(entity);
             return response;
         }
-        public async Task<VisitorEntity> UpdateVisitor(VisitorEntity  visitorEntity)
+        public async Task<VisitorEntity> UpdateVisitor(VisitorEntity visitorEntity)
         {
             var response = await _container.UpsertItemAsync(visitorEntity);
-            return response;    
+            return response;
         }
         public async Task<VisitorEntity> GetVisitorByEmail(string email)
         {
@@ -33,10 +33,10 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
 
             return visitor;
         }
-        public async Task<VisitorEntity> GetVisitorById(string id)
+        public async Task<VisitorEntity> GetVisitorByUId(string uId)
         {
             
-                var visitor = _container.GetItemLinqQueryable<VisitorEntity>(true).Where(q => q.Id == id && q.Active && !q.Archived).FirstOrDefault();
+                var visitor = _container.GetItemLinqQueryable<VisitorEntity>(true).Where(q => q.UId == uId && q.Active && !q.Archived).FirstOrDefault();
 
                 return visitor;
             
@@ -50,7 +50,7 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
         }
         public async Task<List<VisitorEntity>> GetAllVisitors()
         {
-            var visitors = _container.GetItemLinqQueryable<VisitorEntity>(true).Where(s => s.DocumentType == "visitor" && s.Active && !s.Archived).ToList();
+            var visitors = _container.GetItemLinqQueryable<VisitorEntity>(true).Where(s => s.DocumentType == "Visitor" && s.Active && !s.Archived).ToList();
 
             return visitors ;
         }
@@ -59,7 +59,7 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
 
         public async Task<ManagerEntity> AddManager(ManagerEntity managerEntity)
         {
-            var response = await _container.CreateItemAsync<ManagerEntity>(managerEntity);
+            var response = await _container.CreateItemAsync(managerEntity);
             return response;
         }
         public async Task<ManagerEntity> UpdateManager(ManagerEntity managerEntity)
@@ -67,9 +67,9 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
             var response = await _container.UpsertItemAsync(managerEntity);
             return response;
         }
-        public async Task<ManagerEntity> GetManagerById(string id)
+        public async Task<ManagerEntity> GetManagerByUId(string uId)
         {
-                var response = _container.GetItemLinqQueryable<ManagerEntity>(true).Where(q => q.Id == id && q.Active && !q.Archived).FirstOrDefault();
+                var response = _container.GetItemLinqQueryable<ManagerEntity>(true).Where(q => q.UId == uId && q.Active && !q.Archived).FirstOrDefault();
 
                 return response;
 
@@ -78,7 +78,7 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
 
         public async Task<SecurityEntity> AddSecurityUser(SecurityEntity securityEntity)
         {
-            var response = await _container.CreateItemAsync<SecurityEntity>(securityEntity);
+            var response = await _container.CreateItemAsync(securityEntity);
             return response;
         }
         public async Task<SecurityEntity> UpdateSecurityUser(SecurityEntity securityEntity)
@@ -92,17 +92,17 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
 
             return response;
         }
-        public async Task<SecurityEntity> GetSecurityById(string id)
+        public async Task<SecurityEntity> GetSecurityByUId(string uId)
         {
 
-            var response = _container.GetItemLinqQueryable<SecurityEntity>(true).Where(q => q.Id == id && q.Active && !q.Archived).FirstOrDefault();
+            var response = _container.GetItemLinqQueryable<SecurityEntity>(true).Where(q => q.UId == uId && q.Active && !q.Archived).FirstOrDefault();
                 return response;
            
         }
 
         public async Task<OfficeEntity> AddOfficeUser(OfficeEntity officeUserEntity)
         {
-            var response = await _container.CreateItemAsync<OfficeEntity>(officeUserEntity);
+            var response = await _container.CreateItemAsync(officeUserEntity);
             return response;
         }
         public async Task<OfficeEntity> UpdateOfficeUser(OfficeEntity officeUserEntity)
@@ -116,15 +116,18 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
 
             return response;
         }
-        public async Task<OfficeEntity> GetOfficeById(string id)
+        public async Task<OfficeEntity> GetOfficeByUId(string uId)
         {
                 
-            var query = _container.GetItemLinqQueryable<OfficeEntity>(true).Where(q => q.Id == id && q.Active && !q.Archived).FirstOrDefault();
+            var query = _container.GetItemLinqQueryable<OfficeEntity>(true).Where(q => q.UId == uId && q.Active && !q.Archived).FirstOrDefault();
 
                 return query;
            
            
         }
-
+        public async Task ReplaceAsync(dynamic entity)
+        {
+            var response = await _container.ReplaceItemAsync(entity, entity.Id);
+        }
     }
 }

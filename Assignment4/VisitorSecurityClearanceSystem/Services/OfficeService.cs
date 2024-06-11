@@ -17,11 +17,11 @@ namespace VisitorSecurityClearanceSystem.Services
             _cosmosDBServices = cosmosDBServices;
             _mapper = mapper;
         }
-        public async Task<OfficeDTO> AddOffice(OfficeDTO officeModel)
+        public async Task<OfficeDTO> AddOffice(OfficeDTO officeDTO)
         {
 
             // Map the DTO to an Entity
-            var officeEntity = _mapper.Map<OfficeEntity>(officeModel);
+            var officeEntity = _mapper.Map<OfficeEntity>(officeDTO);
 
             // Initialize the Entity
             officeEntity.Initialize(true, "office", "Prerit", "Prerit");
@@ -33,29 +33,29 @@ namespace VisitorSecurityClearanceSystem.Services
             return _mapper.Map<OfficeDTO>(response);
         }
 
-        public async Task<OfficeDTO> GetOfficeById(string id)
+        public async Task<OfficeDTO> GetOfficeByUId(string uId)
         {
-            var office = await _cosmosDBServices.GetOfficeById(id); // Call non-generic method
+            var office = await _cosmosDBServices.GetOfficeByUId(uId);
             return _mapper.Map<OfficeDTO>(office);
         }
 
-        public async Task<OfficeDTO> UpdateOffice(string id, OfficeDTO officeModel)
+        public async Task<OfficeDTO> UpdateOffice(string uId, OfficeDTO officeDTO)
         {
-            var officeEntity = await _cosmosDBServices.GetOfficeById(id);
+            var officeEntity = await _cosmosDBServices.GetOfficeByUId(uId);
             if (officeEntity == null)
             {
-                throw new Exception("Office not found");
+                throw new Exception("OfficeUser not found");
             }
-            officeEntity = _mapper.Map<OfficeEntity>(officeModel);
-            officeEntity.Id = id;
+            officeEntity = _mapper.Map<OfficeEntity>(officeDTO);
+            officeEntity.UId = uId;
             var response = await _cosmosDBServices.UpdateOfficeUser(officeEntity);
             return _mapper.Map<OfficeDTO>(response);
         }
 
-        public async Task<string> DeleteOffice(string id)
+        public async Task<string> DeleteOffice(string uId)
         {
             /*await _cosmosDBServices.DeleteVisitor(id);*/
-            var officeUserToDelete = await _cosmosDBServices.GetManagerById(id);
+            var officeUserToDelete = await _cosmosDBServices.GetManagerByUId(uId);
             officeUserToDelete.Active = false;
             officeUserToDelete.Archived = true;
             await _cosmosDBServices.UpdateManager(officeUserToDelete);
@@ -82,7 +82,7 @@ namespace VisitorSecurityClearanceSystem.Services
             // Map ManagerEntity to ManagerDTO
             var officeDto = new OfficeDTO
             {
-                Id = officeUser.Id,
+                UId = officeUser.UId,
                 Name = officeUser.Name,
                 Email = officeUser.Email,
                 Phone = officeUser.Phone,

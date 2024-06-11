@@ -17,11 +17,11 @@ namespace VisitorSecurityClearanceSystem.Services
             _cosmosDBServices = cosmosDBServices;
             _mapper = mapper;
         }
-        public async Task<SecurityDTO> AddSecurity(SecurityDTO securityModel)
+        public async Task<SecurityDTO> AddSecurity(SecurityDTO securityDTO)
         {
 
             // Map the DTO to an Entity
-            var securityEntity = _mapper.Map<SecurityEntity>(securityModel);
+            var securityEntity = _mapper.Map<SecurityEntity>(securityDTO);
 
             // Initialize the Entity
             securityEntity.Initialize(true, "security", "Prerit", "Prerit");
@@ -33,29 +33,29 @@ namespace VisitorSecurityClearanceSystem.Services
             return _mapper.Map<SecurityDTO>(response);
         }
 
-        public async Task<SecurityDTO> GetSecurityById(string id)
+        public async Task<SecurityDTO> GetSecurityByUId(string uId)
         {
-            var security = await _cosmosDBServices.GetSecurityById(id); // Call non-generic method
+            var security = await _cosmosDBServices.GetSecurityByUId(uId); // Call non-generic method
             return _mapper.Map<SecurityDTO>(security);
         }
 
-        public async Task<SecurityDTO> UpdateSecurity(string id, SecurityDTO securityModel)
+        public async Task<SecurityDTO> UpdateSecurity(string uId, SecurityDTO securityDTO)
         {
-            var securityEntity = await _cosmosDBServices.GetSecurityById(id);
+            var securityEntity = await _cosmosDBServices.GetSecurityByUId(uId);
             if (securityEntity == null)
             {
                 throw new Exception("Security not found");
             }
-            securityEntity = _mapper.Map<SecurityEntity>(securityModel);
-            securityEntity.Id = id;
+            securityEntity = _mapper.Map<SecurityEntity>(securityDTO);
+            securityEntity.UId = uId;
             var response = await _cosmosDBServices.UpdateSecurityUser(securityEntity);
             return _mapper.Map<SecurityDTO>(response);
         }
 
-        public async Task<string> DeleteSecurity(string id)
+        public async Task<string> DeleteSecurity(string uId)
         {
             /*await _cosmosDBServices.DeleteSecurity(id);*/
-            var securityUserToDelete = await _cosmosDBServices.GetManagerById(id);
+            var securityUserToDelete = await _cosmosDBServices.GetManagerByUId(uId);
             securityUserToDelete.Active = false;
             securityUserToDelete.Archived = true;
             await _cosmosDBServices.UpdateManager(securityUserToDelete);
@@ -81,7 +81,7 @@ namespace VisitorSecurityClearanceSystem.Services
             // Map ManagerEntity to ManagerDTO
             var securityDto = new SecurityDTO
             {
-                Id = securityUser.Id,
+                UId = securityUser.UId,
                 Name = securityUser.Name,
                 Email = securityUser.Email,
             };

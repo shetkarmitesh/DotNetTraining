@@ -5,8 +5,6 @@ namespace VisitorSecurityClearanceSystem.Entities
 {
     public class VisitorEntity :BaseEntity
     {
-        [JsonProperty(PropertyName = "id", NullValueHandling = NullValueHandling.Ignore)]
-        public string Id { get; set; }
 
         [JsonProperty(PropertyName = "name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
