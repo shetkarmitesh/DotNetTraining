@@ -8,7 +8,7 @@ namespace VisitorSecurityClearanceSystem.Services
     {
         public async Task SendEmail(string subject,string toEmail, string userName,string message, byte[] pdfBytes=null)
         {
-            var apiKey = "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";
+            var apiKey = "";
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("tempvirajtapkir1800@gmail.com", "VisitorSecurityClearanceSystem");
             var to = new EmailAddress(toEmail, userName);
