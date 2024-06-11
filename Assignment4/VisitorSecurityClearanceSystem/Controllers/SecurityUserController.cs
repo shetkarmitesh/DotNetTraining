@@ -4,6 +4,8 @@ using VisitorSecurityClearanceSystem.Interfaces;
 
 namespace VisitorSecurityClearanceSystem.Controllers
 {
+    [Route("api/[Controller]/[Action]")]
+    [ApiController]
     public class SecurityUserController : Controller
     {
         private readonly ISecurityService _securityService;

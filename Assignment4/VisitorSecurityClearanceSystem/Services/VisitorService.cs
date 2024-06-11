@@ -4,6 +4,10 @@ using VisitorSecurityClearanceSystem.DTOs;
 using VisitorSecurityClearanceSystem.Interfaces;
 using AutoMapper;
 using VisitorSecurityClearanceSystem.Entities;
+using System.Drawing;
+using System.Xml.Linq;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
 namespace VisitorSecurityClearanceSystem.Services
 {
     public class VisitorService : IVisitorService
@@ -30,6 +34,25 @@ namespace VisitorSecurityClearanceSystem.Services
             var response = await _cosmosDBServices.AddVisitor(visitor);
 
             //prepare email
+            string subject = "Visitor Registration Approval Request";
+            string toEmail = "tempvirajtapkir1800@gmail.com";  // Change to manager's email
+            string userName = "Manager";
+            // Construct the email message with visitor's details
+            string message = $"Dear {userName},\n\n" +
+                             $"A new visitor has registered and is awaiting your approval.\n\n" +
+                             $"Visitor Details:\n" +
+                             $"Name: {visitorDTO.Name}\n" +
+                             $"Contact Number: {visitorDTO.Phone}\n" +
+                             $"Email: {visitorDTO.Email}\n" +
+                             $"Purpose of Visit: {visitorDTO.Purpose}\n\n" +
+                             "Please review the details and approve or reject the request.\n\n" +
+                             "Thank you,\nVisitor Management System";
+
+            // Sending the email
+            EmailSender emailSender = new EmailSender();
+            await emailSender.SendEmail(subject, toEmail, userName, message);
+
+
             var responseDTO = _mapper.Map<VisitorDTO>(response);
             return responseDTO;
         }
@@ -78,6 +101,7 @@ namespace VisitorSecurityClearanceSystem.Services
             visitorEntity = _mapper.Map<VisitorEntity>(visitorModel); ;
             visitorEntity.Id = id;
             var response = await _cosmosDBServices.UpdateVisitor(visitorEntity);
+
             return _mapper.Map<VisitorDTO>(response);
         }
         public async Task<VisitorDTO> UpdateVisitorStatus(string visitorId, bool newStatus)
@@ -91,6 +115,28 @@ namespace VisitorSecurityClearanceSystem.Services
             await _cosmosDBServices.UpdateVisitor(visitor);
 
             //email mapping
+            // Prepare email details
+            string subject = "Your Visitor Status Has Been Updated";
+            string toEmail = visitor.Email;  // Send to visitor's email
+            string userName = visitor.Name;
+
+            // Construct the email message with the new status details
+            string message = $"Dear {userName},\n\n" +
+                             $"We wanted to inform you that your visitor status has been updated.\n\n" +
+                             $"New Status: {newStatus}\n\n" +
+                             "If you have any questions or need further assistance, please contact us.\n\n" +
+                             "Thank you,\nVisitor Management System";
+
+            // If the status is true, generate the PDF and attach it to the email
+            byte[] pdfBytes = null;
+            if (newStatus)
+            {
+                pdfBytes = GenerateVisitorPassPdf(visitor);
+            }
+
+            // Send the email with or without the PDF attachment
+            EmailSender emailSender = new EmailSender();
+            await emailSender.SendEmail(subject, toEmail, userName, message, pdfBytes);
 
             var response = _mapper.Map<VisitorDTO>(visitor); ;
             /*return new VisitorDTO
@@ -117,6 +163,39 @@ namespace VisitorSecurityClearanceSystem.Services
 
             await _cosmosDBServices.AddVisitor(visitorToDelete);
             return "Record Deleted Successfully...";
+        }
+
+        private byte[] GenerateVisitorPassPdf(VisitorEntity visitor)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                // Create a new PDF document
+                PdfDocument document = new PdfDocument();
+                PdfPage page = document.AddPage();
+                XGraphics gfx = XGraphics.FromPdfPage(page);
+
+                // Define fonts
+                XFont titleFont = new XFont("Arial", 20, XFontStyle.Bold);
+                XFont normalFont = new XFont("Arial", 12);
+
+                // Draw title
+                gfx.DrawString("Visitor Pass", titleFont, XBrushes.Black, new XRect(0, 20, page.Width.Point, page.Height.Point), XStringFormats.Center);
+
+                // Draw visitor details
+                int yOffset = 60;
+                gfx.DrawString($"Name: {visitor.Name}", normalFont, XBrushes.Black, new XRect(50, yOffset, page.Width.Point - 100, page.Height.Point), XStringFormats.TopLeft);
+                yOffset += 20;
+                gfx.DrawString($"Email: {visitor.Email}", normalFont, XBrushes.Black, new XRect(50, yOffset, page.Width.Point - 100, page.Height.Point), XStringFormats.TopLeft);
+                yOffset += 20;
+                gfx.DrawString($"Phone: {visitor.Phone}", normalFont, XBrushes.Black, new XRect(50, yOffset, page.Width.Point - 100, page.Height.Point), XStringFormats.TopLeft);
+                yOffset += 20;
+                gfx.DrawString($"Purpose of Visit: {visitor.Purpose}", normalFont, XBrushes.Black, new XRect(50, yOffset, page.Width.Point - 100, page.Height.Point), XStringFormats.TopLeft);
+
+                // Save the PDF to memory stream
+                document.Save(ms);
+                ms.Position = 0;
+                return ms.ToArray();
+            }
         }
 
     }

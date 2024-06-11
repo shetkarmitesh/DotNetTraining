@@ -5,6 +5,8 @@ using VisitorSecurityClearanceSystem.Services;
 
 namespace VisitorSecurityClearanceSystem.Controllers
 {
+    [Route("api/[Controller]/[Action]")]
+    [ApiController]
     public class OfficeUserController : Controller
     {
 
@@ -41,7 +43,6 @@ namespace VisitorSecurityClearanceSystem.Controllers
             
                 var updatedSecurity = await _officeService.UpdateOffice(id, securityModel);
                 return updatedSecurity;
-           
         }
 
         [HttpPut]
@@ -49,9 +50,7 @@ namespace VisitorSecurityClearanceSystem.Controllers
         {
             
                 var updatedVisitor = await _visitorService.UpdateVisitorStatus(visitorId, newStatus);
-                return updatedVisitor;
-          
-           
+                return updatedVisitor;  
         }
 
         [HttpGet]
@@ -61,11 +60,9 @@ namespace VisitorSecurityClearanceSystem.Controllers
             return visitors;
         }
 
-
         [HttpDelete]
         public async Task<string> DeleteOffice(string id)
-        {
-            
+        {  
             var response = await _officeService.DeleteOffice(id);
             return response;
         }
