@@ -7,6 +7,7 @@
         public static readonly string CosmosEndpoint = Environment.GetEnvironmentVariable("cosmosURL");
         public static readonly string PrimaryKey = Environment.GetEnvironmentVariable("primaryKey");
         public static string VisitorDocumnetType = "Visitor";
+        public static string ApiKey = Environment.GetEnvironmentVariable("apiKey");
 
     }
 }

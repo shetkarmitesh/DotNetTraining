@@ -1,6 +1,8 @@
 ﻿using SendGrid.Helpers.Mail;
 using System.Net.Mail;
 using SendGrid;
+using System.Net;
+using VisitorSecurityClearanceSystem.Common;
 
 namespace VisitorSecurityClearanceSystem.Services
 {
@@ -8,7 +10,7 @@ namespace VisitorSecurityClearanceSystem.Services
     {
         public async Task SendEmail(string subject,string toEmail, string userName,string message, byte[] pdfBytes=null)
         {
-            var apiKey = "";
+            var apiKey = Credentials.ApiKey;
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("tempvirajtapkir1800@gmail.com", "VisitorSecurityClearanceSystem");
             var to = new EmailAddress(toEmail, userName);
