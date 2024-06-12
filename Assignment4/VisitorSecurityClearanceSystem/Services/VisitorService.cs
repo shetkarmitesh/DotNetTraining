@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Xml.Linq;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
+using System.Text.RegularExpressions;
 namespace VisitorSecurityClearanceSystem.Services
 {
     public class VisitorService : IVisitorService
@@ -31,24 +32,37 @@ namespace VisitorSecurityClearanceSystem.Services
 
             var visitor = _mapper.Map<VisitorEntity>(visitorDTO);
             visitor.Initialize(true, Credentials.VisitorDocumnetType, "Admin", "Admin");
-            //prepare email
-            string subject = "Visitor Registration Approval Request";
-            string toEmail = "tempvirajtapkir1800@gmail.com";  // Change to manager's email
-            string userName = "Manager";
-            // Construct the email message with visitor's details
-            string message = $"Dear {userName},\n\n" +
-                             $"A new visitor has registered and is awaiting your approval.\n\n" +
-                             $"Visitor Details:\n" +
-                             $"Name: {visitorDTO.Name}\n" +
-                             $"Contact Number: {visitorDTO.Phone}\n" +
-                             $"Email: {visitorDTO.Email}\n" +
-                             $"Purpose of Visit: {visitorDTO.Purpose}\n\n" +
-                             "Please review the details and approve or reject the request.\n\n" +
-                             "Thank you,\nVisitor Management System";
 
-            // Sending the email
-            EmailSender emailSender = new EmailSender();
-            await emailSender.SendEmail(subject, toEmail, userName, message);
+            List<OfficeEntity> officeUser = await _cosmosDBServices.GetAllOfficeUser();
+            foreach (var officer in officeUser)
+            {
+                if (officer.CompanyName == visitorDTO.CompanyName)
+                {
+                    //prepare email
+                    string subject = "Visitor Registration Approval Request";
+                    /*string toEmail = "tempvirajtapkir1800@gmail.com"; */
+                    string toEmail = officer.Email;
+                    string userName = "Manager (Office User)";
+                    // Construct the email message with visitor's details
+                    string message = $"Dear {userName},\n\n" +
+                                     $"A new visitor has registered and is awaiting your approval.\n\n" +
+                                     $"Visitor Details:\n" +
+                                     $"Name: {visitorDTO.Name}\n" +
+                                     $"Contact Number: {visitorDTO.Phone}\n" +
+                                     $"Email: {visitorDTO.Email}\n" +
+                                     $"Purpose of Visit: {visitorDTO.Purpose}\n\n" +
+                                     "Please review the details and approve or reject the request.\n\n" +
+                                     "Thank you,\nVisitor Management System";
+
+                    // Sending the email
+                    EmailSender emailSender = new EmailSender();
+                    await emailSender.SendEmail(subject, toEmail, userName, message);
+
+                }
+            }
+            
+
+
             var response = await _cosmosDBServices.AddVisitor(visitor);
 
 
@@ -204,6 +218,53 @@ namespace VisitorSecurityClearanceSystem.Services
                 ms.Position = 0;
                 return ms.ToArray();
             }
+        }
+
+        public async Task<List<VisitorDTO>> SearchVisitors(string name = null, string company = null, DateTime? fromDate = null, DateTime? toDate = null, bool? pass = null)
+        {
+            var query = await _cosmosDBServices.GetAllVisitors();
+            var visitorDTOs = new List<VisitorDTO>();
+            foreach (var visitor in query)
+            {
+                if (MatchesCriteria(visitor, name, company, fromDate, toDate,pass))
+                {
+                    var visitorDTO = _mapper.Map<VisitorDTO>(visitor);
+                    visitorDTOs.Add(visitorDTO);
+                }
+            }
+
+            return visitorDTOs;
+
+        }
+        private bool MatchesCriteria(VisitorEntity visitor, string name,string company, DateTime? fromDate, DateTime? toDate, bool? pass = null)
+        {
+            bool match = true;
+            if (!string.IsNullOrEmpty(name) && !visitor.Name.ToLower().Contains(name.ToLower()))
+            {
+                match = false;
+            }
+
+            if (!string.IsNullOrEmpty(company) && !visitor.CompanyName.ToLower().Contains(company.ToLower()))
+            {
+                match = false;
+            }
+
+            if (fromDate.HasValue && visitor.EntryTime < fromDate)
+            {
+                match = false;
+            }
+
+            if (toDate.HasValue && visitor.ExitTime > toDate)
+            {
+                match = false;
+            }
+
+            // Check for Pass field (if provided)
+            if (pass.HasValue)
+            {
+                match = match && visitor.PassStatus == pass.Value; // Use strict equality for bool
+            }
+            return match;
         }
 
     }

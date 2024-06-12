@@ -24,7 +24,7 @@ namespace VisitorSecurityClearanceSystem.Services
             var securityEntity = _mapper.Map<SecurityEntity>(securityDTO);
 
             // Initialize the Entity
-            securityEntity.Initialize(true, "security", "Prerit", "Prerit");
+            securityEntity.Initialize(true, "security", "Admin", "Admin");
 
             // Add the entity to the database
             var response = await _cosmosDBServices.AddSecurityUser(securityEntity);
@@ -41,14 +41,24 @@ namespace VisitorSecurityClearanceSystem.Services
 
         public async Task<SecurityDTO> UpdateSecurity(string uId, SecurityDTO securityDTO)
         {
-            var securityEntity = await _cosmosDBServices.GetSecurityByUId(uId);
-            if (securityEntity == null)
+            var SecurityEntity = await _cosmosDBServices.GetSecurityByUId(uId);
+            if (SecurityEntity == null)
             {
                 throw new Exception("Security not found");
             }
-            securityEntity = _mapper.Map<SecurityEntity>(securityDTO);
-            securityEntity.UId = uId;
-            var response = await _cosmosDBServices.UpdateSecurityUser(securityEntity);
+            SecurityEntity.Active = false;
+            SecurityEntity.Archived = true;
+            await _cosmosDBServices.ReplaceAsync(SecurityEntity);
+
+            SecurityEntity.Initialize(false, "security", "Admin", "Admin");
+            SecurityEntity.UId = securityDTO.UId;
+            SecurityEntity.Name = securityDTO.Name;
+            SecurityEntity.Email = securityDTO.Email;
+            SecurityEntity.Phone = securityDTO.Phone;
+            SecurityEntity.Role = securityDTO.Role;
+            SecurityEntity.CompanyName = securityDTO.CompanyName;
+
+            var response = await _cosmosDBServices.UpdateSecurityUser(SecurityEntity);
             return _mapper.Map<SecurityDTO>(response);
         }
 

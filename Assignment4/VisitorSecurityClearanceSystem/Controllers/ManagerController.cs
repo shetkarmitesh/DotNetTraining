@@ -81,6 +81,13 @@ namespace VisitorSecurityClearanceSystem.Controllers
             var visitors = await _visitorService.GetVisitorsByStatus(status);
             return visitors;
         }
-        
+        [HttpGet]
+        public async Task<List<VisitorDTO>> SearchVisitors(string name = null, string company = null, bool? pass=null,  DateTime? fromDate = null, DateTime? toDate = null)
+        {
+            // Implement logic to search for visitors based on the provided criteria
+            // Use your data access layer (e.g., Entity Framework) to query visitor data
+            var searchResults = await _visitorService.SearchVisitors(name, company, fromDate, toDate,pass);
+            return searchResults;
+        }
     }
 }

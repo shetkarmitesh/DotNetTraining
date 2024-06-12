@@ -8,6 +8,8 @@ namespace VisitorSecurityClearanceSystem.DTOs
         public string UId { get; set; }
         [JsonProperty("name")]
         public string Name { get; set; }
+        [JsonProperty("companyName")]
+        public string CompanyName { get; set; }
 
         [JsonProperty("email")]
         public string Email { get; set; }
@@ -20,5 +22,6 @@ namespace VisitorSecurityClearanceSystem.DTOs
 
         [JsonProperty("role")]
         public string Role { get; set; }
+
     }
 }

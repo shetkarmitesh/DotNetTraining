@@ -24,7 +24,7 @@ namespace VisitorSecurityClearanceSystem.Services
             var managerEntity = _mapper.Map<ManagerEntity>(managerDTO);
 
             // Initialize the Entity
-            managerEntity.Initialize(true, "manager", "Prerit", "Prerit");
+            managerEntity.Initialize(true, "manager", "Admin", "Admin");
 
             // Add the entity to the database
             var response = await _cosmosDBServices.AddManager(managerEntity);
@@ -46,8 +46,18 @@ namespace VisitorSecurityClearanceSystem.Services
             {
                 throw new Exception("Manager not found");
             }
-            managerEntity = _mapper.Map<ManagerEntity>(managerDTO);
-            managerEntity.UId = uId;
+            managerEntity.Active = false;
+            managerEntity.Archived = true;
+            await _cosmosDBServices.ReplaceAsync(managerEntity);
+
+            managerEntity.Initialize(false, "manager", "Admin", "Admin");
+            managerEntity.UId = managerDTO.UId;
+            managerEntity.Name = managerDTO.Name;
+            managerEntity.Email = managerDTO.Email;
+            managerEntity.Phone = managerDTO.Phone;
+            managerEntity.Role = managerDTO.Role;
+            managerEntity.CompanyName = managerDTO.CompanyName;
+
             var response = await _cosmosDBServices.UpdateManager(managerEntity);
             return _mapper.Map<ManagerDTO>(response);
         }

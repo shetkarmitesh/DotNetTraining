@@ -19,12 +19,13 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
         Task<SecurityEntity> GetSecurityUserByEmail(string email);
         Task<SecurityEntity> AddSecurityUser(SecurityEntity security);
         Task<SecurityEntity> UpdateSecurityUser(SecurityEntity securityEntity);
-        
+
 
 
 
 
         //Office User methods
+        Task<List<OfficeEntity>> GetAllOfficeUser();
         Task<OfficeEntity> GetOfficeByUId(string uId);
         Task<OfficeEntity> GetOfficeUserByEmail(string email);
         Task<OfficeEntity> AddOfficeUser(OfficeEntity officer);
@@ -37,4 +38,5 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
 
         Task ReplaceAsync(dynamic entity);
     }
+
 }

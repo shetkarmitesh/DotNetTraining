@@ -11,5 +11,7 @@ namespace VisitorSecurityClearanceSystem.Interfaces
         Task<VisitorDTO> UpdateVisitorStatus(string visitorId, bool newStatus);
         Task<List<VisitorDTO>> GetVisitorsByStatus(bool status);
         Task<string> DeleteVisitor(string uId);
+
+        Task<List<VisitorDTO>> SearchVisitors(string name = null, string company = null, DateTime? fromDate = null, DateTime? toDate = null, bool? pass = null);
     }
 }

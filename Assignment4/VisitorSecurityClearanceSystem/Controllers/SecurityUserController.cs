@@ -28,11 +28,13 @@ namespace VisitorSecurityClearanceSystem.Controllers
             return Ok(securityUser);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetVisitorsByStatus(bool status)
+        [HttpPut]
+        public async Task<VisitorDTO> UpdateVisitorStatus(string visitorUId, bool newStatus)
         {
-            var visitors = await _visitorService.GetVisitorsByStatus(status);
-            return Ok(visitors);
+
+            var updatedVisitor = await _visitorService.UpdateVisitorStatus(visitorUId, newStatus);
+            return updatedVisitor;
+
         }
 
         [HttpGet]

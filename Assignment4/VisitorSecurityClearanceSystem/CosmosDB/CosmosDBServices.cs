@@ -2,6 +2,7 @@
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Linq;
 using VisitorSecurityClearanceSystem.Common;
+using VisitorSecurityClearanceSystem.DTOs;
 using VisitorSecurityClearanceSystem.Entities;
 using VisitorSecurityClearanceSystem.Interfaces;
 
@@ -74,7 +75,12 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
                 return response;
 
         }
+        public async Task<T> GetManagerByEmail<T>(string email) where T : ManagerEntity
+        {
+            var user = _container.GetItemLinqQueryable<T>(true).Where(q => q.Email == email && q.Active && !q.Archived).FirstOrDefault();
 
+            return user;
+        }
 
         public async Task<SecurityEntity> AddSecurityUser(SecurityEntity securityEntity)
         {
@@ -100,6 +106,7 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
            
         }
 
+
         public async Task<OfficeEntity> AddOfficeUser(OfficeEntity officeUserEntity)
         {
             var response = await _container.CreateItemAsync(officeUserEntity);
@@ -123,11 +130,20 @@ namespace VisitorSecurityClearanceSystem.CosmosDB
 
                 return query;
            
-           
         }
+        public async Task<List<OfficeEntity>> GetAllOfficeUser()
+        {
+            var officeUsers = _container.GetItemLinqQueryable<OfficeEntity>(true).Where(s => s.DocumentType == "office" && s.Active && !s.Archived).ToList();
+
+            return officeUsers;
+        }
+
+
         public async Task ReplaceAsync(dynamic entity)
         {
             var response = await _container.ReplaceItemAsync(entity, entity.Id);
         }
+
+        
     }
 }

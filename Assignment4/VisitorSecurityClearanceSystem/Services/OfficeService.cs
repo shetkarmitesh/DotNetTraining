@@ -24,13 +24,24 @@ namespace VisitorSecurityClearanceSystem.Services
             var officeEntity = _mapper.Map<OfficeEntity>(officeDTO);
 
             // Initialize the Entity
-            officeEntity.Initialize(true, "office", "Prerit", "Prerit");
+            officeEntity.Initialize(true, "office", "Admin", "Admin");
 
             // Add the entity to the database
             var response = await _cosmosDBServices.AddOfficeUser(officeEntity);
 
             // Map the response back to a DTO
             return _mapper.Map<OfficeDTO>(response);
+        }
+        public async Task<List<OfficeDTO>> GetAllOfficeUser()
+        {
+            var officeUsers = await _cosmosDBServices.GetAllOfficeUser();
+            var officeDTOs = new List<OfficeDTO>();
+            foreach (var office in officeUsers)
+            {
+                var officeDTO = _mapper.Map<OfficeDTO>(office);
+                officeDTOs.Add(officeDTO);
+            }
+            return officeDTOs;
         }
 
         public async Task<OfficeDTO> GetOfficeByUId(string uId)
@@ -46,8 +57,19 @@ namespace VisitorSecurityClearanceSystem.Services
             {
                 throw new Exception("OfficeUser not found");
             }
-            officeEntity = _mapper.Map<OfficeEntity>(officeDTO);
-            officeEntity.UId = uId;
+            /*officeEntity = _mapper.Map<OfficeEntity>(officeDTO);*/
+            officeEntity.Active = false;
+            officeEntity.Archived = true;
+            await _cosmosDBServices.ReplaceAsync(officeEntity);
+
+            officeEntity.Initialize(false, "office", "Admin", "Admin");
+            officeEntity.UId = officeDTO.UId;
+            officeEntity.Name = officeDTO.Name;
+            officeEntity.Email = officeDTO.Email;
+            officeEntity.Phone = officeDTO.Phone;
+            officeEntity.Role = officeDTO.Role;
+            officeEntity.CompanyName = officeDTO.CompanyName;
+            
             var response = await _cosmosDBServices.UpdateOfficeUser(officeEntity);
             return _mapper.Map<OfficeDTO>(response);
         }

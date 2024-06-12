@@ -35,22 +35,27 @@ namespace VisitorSecurityClearanceSystem.Controllers
         public async Task<OfficeDTO> GetOfficeByUId(string uId)
         {
             return await _officeService.GetOfficeByUId(uId);
+        }[HttpGet]
+        public async Task<List<OfficeDTO>> GetAllOfficeUsers()
+        {
+            return await _officeService.GetAllOfficeUser();
         }
 
         [HttpPut]
-        public async Task<OfficeDTO> UpdateOffice(string uId, OfficeDTO securityDTO)
+        public async Task<OfficeDTO> UpdateOffice(string uId, OfficeDTO officeDTO)
         {
             
-                var updatedSecurity = await _officeService.UpdateOffice(uId, securityDTO);
+                var updatedSecurity = await _officeService.UpdateOffice(uId, officeDTO);
                 return updatedSecurity;
         }
 
         [HttpPut]
         public async Task<VisitorDTO> UpdateVisitorStatus(string visitorUId, bool newStatus)
         {
-            
-                var updatedVisitor = await _visitorService.UpdateVisitorStatus(visitorUId, newStatus);
-                return updatedVisitor;  
+
+            var updatedVisitor = await _visitorService.UpdateVisitorStatus(visitorUId, newStatus);
+            return updatedVisitor;
+
         }
 
         [HttpGet]

@@ -8,6 +8,8 @@ namespace VisitorSecurityClearanceSystem.Entities
 
         [JsonProperty(PropertyName = "name", NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
+        [JsonProperty("companyName")]
+        public string CompanyName { get; set; }
 
         [JsonProperty(PropertyName = "phone", NullValueHandling = NullValueHandling.Ignore)]
         public string Phone { get; set; }

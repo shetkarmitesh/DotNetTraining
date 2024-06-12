@@ -8,7 +8,7 @@ namespace VisitorSecurityClearanceSystem.Interfaces
         Task<OfficeDTO> GetOfficeByUId(string uId);
         Task<OfficeDTO> UpdateOffice(string uId, OfficeDTO officeDTO);
         Task<string> DeleteOffice(string uId);
-
+        Task<List<OfficeDTO>> GetAllOfficeUser();
         Task<OfficeDTO> LoginOfficeUser(string email, string password);
     }
 }
