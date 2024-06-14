@@ -23,7 +23,7 @@ namespace Employee_Management_System.Services
             }
             public async Task<EmployeeAdditionalDetailsDTO> AddEmployeeAdditionalDetails(EmployeeAdditionalDetailsDTO employeeAdditionalDetailsDTO)
             {
-            var employeeBasicDetails = await _employeeBasicDetailsService.GetEmployeeBasicDetailsByUId(employeeAdditionalDetailsDTO.EmployeeBasicDetailsUId);
+            var employeeBasicDetails = await _employeeBasicDetailsService.GetEmployeeBasicDetailsById(employeeAdditionalDetailsDTO.EmployeeBasicDetailsUId);
                  if (employeeBasicDetails == null)
                 {
                     throw new Exception("Employee Basic details not found ");

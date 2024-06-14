@@ -24,6 +24,7 @@ namespace Employee_Management_System.Services
             var employeeEntity = _mapper.Map<EmployeeBasicDetails>(employeeBasicDetailsDTO);
 
             employeeEntity.Initialize(true, "employeeBasicDetails", "Admin", "Admin");
+            employeeEntity.EmployeeID=employeeEntity.Id;
             var response = await _cosmosDBServices.AddEmployeeBasicDetails(employeeEntity);
 
             return _mapper.Map<EmployeeBasicDetailsDTO>(response);
@@ -45,11 +46,12 @@ namespace Employee_Management_System.Services
         {
             var response = await _cosmosDBServices.GetEmployeeBasicDetailsById(id); 
             return _mapper.Map<EmployeeBasicDetailsDTO>(response);
-        }public async Task<EmployeeBasicDetailsDTO> GetEmployeeBasicDetailsByUId(string uId)
+        }
+        /*public async Task<EmployeeBasicDetailsDTO> GetEmployeeBasicDetailsByUId(string uId)
         {
             var response = await _cosmosDBServices.GetEmployeeBasicDetailsByUId(uId); 
             return _mapper.Map<EmployeeBasicDetailsDTO>(response);
-        }
+        }*/
 
         public async Task<EmployeeBasicDetailsDTO> UpdateEmployeeBasicDetails( EmployeeBasicDetailsDTO employeeBasicDetailsDTO)
         {
@@ -70,9 +72,9 @@ namespace Employee_Management_System.Services
             return _mapper.Map<EmployeeBasicDetailsDTO>(response);
         }
 
-        public async Task<string> DeleteEmployeeBasicDetailsById(string uId)
+        public async Task<string> DeleteEmployeeBasicDetailsById(string id)
         {
-            var employeeToDelete = await _cosmosDBServices.GetEmployeeBasicDetailsById(uId);
+            var employeeToDelete = await _cosmosDBServices.GetEmployeeBasicDetailsById(id);
             employeeToDelete.Active = false;
             employeeToDelete.Archived = true;
             employeeToDelete.Initialize(false, "employeeBasicDetails", "Admin", "Admin");

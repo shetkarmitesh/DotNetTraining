@@ -63,14 +63,6 @@ namespace Employee_Management_System.CosmosDB
 
             return response;
 
-        }public async Task<EmployeeBasicDetails> GetEmployeeBasicDetailsByUId(string uId)
-        {
-
-            var response = _container.GetItemLinqQueryable<EmployeeBasicDetails>(true).Where(q => q.EmployeeBasicDetailsUId == uId && q.Active && !q.Archived).FirstOrDefault();
-
-
-            return response;
-
         }
 
         

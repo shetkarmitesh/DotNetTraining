@@ -9,7 +9,7 @@ namespace Employee_Management_System.Interfaces
         Task<EmployeeBasicDetailsDTO> AddEmployeeBasicDetails(EmployeeBasicDetailsDTO basicDetailsDTO);
         Task<List<EmployeeBasicDetailsDTO>> GetAllEmployeeBasicDetails();
         Task<EmployeeBasicDetailsDTO> GetEmployeeBasicDetailsById(string id);
-        Task<EmployeeBasicDetailsDTO> GetEmployeeBasicDetailsByUId(string uId);
+ /*       Task<EmployeeBasicDetailsDTO> GetEmployeeBasicDetailsByUId(string uId);*/
         Task<EmployeeBasicDetailsDTO> UpdateEmployeeBasicDetails(EmployeeBasicDetailsDTO basicDetailsDTO);
         Task<String> DeleteEmployeeBasicDetailsById(string id);
     }

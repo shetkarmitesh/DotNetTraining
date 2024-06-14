@@ -6,8 +6,8 @@ namespace Employee_Management_System.Common
         [JsonProperty(PropertyName = "id", NullValueHandling = NullValueHandling.Ignore)]
         public string Id { get; set; }
 
-        [JsonProperty(PropertyName = "employeeBasicDetailsUId", NullValueHandling = NullValueHandling.Ignore)]
-        public string EmployeeBasicDetailsUId { get; set; }
+        /*[JsonProperty(PropertyName = "employeeBasicDetailsUIdOrEmployeeId", NullValueHandling = NullValueHandling.Ignore)]
+        public string EmployeeBasicDetailsUId { get; set; }*/
 
         [JsonProperty(PropertyName = "documentType", NullValueHandling = NullValueHandling.Ignore)]
         public string DocumentType { get; set; }
@@ -44,10 +44,7 @@ namespace Employee_Management_System.Common
             if (isNew)
             {
                 // Adding new record
-                if (dType == "employeeBasicDetails")
-                {
-                    EmployeeBasicDetailsUId = Id;
-                }
+                
                 CreatedBy = createdOrUpdatedBy;
                 CreatedOn = DateTime.UtcNow;
                 Version = 1;
