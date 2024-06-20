@@ -26,7 +26,12 @@
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7141;http://localhost:5032",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "databaseName": "LibraryManagementSystem",
+        "containerName1": "Members",
+        "containerName2": "Librarians",
+        "cosmosURL": "https://localhost:8081"
+        
       }
     },
     "IIS Express": {
