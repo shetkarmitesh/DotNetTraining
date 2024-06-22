@@ -1,13 +1,14 @@
-﻿namespace Libaray_Management_System.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace Libaray_Management_System.Entities
 {
     public class BaseEntity
     {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
 
-        public string UId { get; set; }
-
-       /* public string DocumentType { get; set; }
-*/
         public int Version { get; set; }
 
         public string UpdatedBy { get; set; }
@@ -24,7 +25,6 @@
 
         public void Initialize(bool isNew, string createdOrUpdatedBy)
         {
-            Id = Guid.NewGuid().ToString();
             Active = true;
             Archived = false;
 
@@ -32,7 +32,6 @@
             if (isNew)
             {
                 // Adding new record
-                UId = Id;
                 CreatedBy = createdOrUpdatedBy;
                 CreatedOn = DateTime.UtcNow;
                 Version = 1;

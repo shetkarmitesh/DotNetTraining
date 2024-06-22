@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Libaray_Management_System.Migrations
 {
     [DbContext(typeof(MemberDBContext))]
-    [Migration("20240620190649_MemberMigration")]
-    partial class MemberMigration
+    [Migration("20240622065940_NewMemberMigration")]
+    partial class NewMemberMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,9 @@ namespace Libaray_Management_System.Migrations
 
             modelBuilder.Entity("Libaray_Management_System.Entities.MemberEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("varchar(255)");
 
                     b.Property<bool>("Active")
                         .HasColumnType("tinyint(1)");
@@ -58,10 +56,14 @@ namespace Libaray_Management_System.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("PhoneNo")
+                    b.Property<int>("MemberId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UId")
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("PhoneNo")
                         .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")

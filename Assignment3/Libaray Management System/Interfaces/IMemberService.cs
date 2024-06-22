@@ -6,7 +6,10 @@ namespace Libaray_Management_System.Interfaces
     public interface IMemberService
     {
         Task<ActionResult<MemberModel>> AddMember(MemberModel memberModel);
-        Task<MemberModel> GetMemberByUId(int uId);
+        Task<IEnumerable<MemberModel>> GetAllMembers();
+        Task<MemberModel> GetMemberByMemberId(int memberI);
         Task<MemberModel> GetMemberByEmail(string email);
+        Task<ActionResult<MemberModel>> UpdateMember(MemberModel memberModel);
+        Task<MemberModel> DeleteMember(int memberId);
     }
 }

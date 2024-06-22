@@ -1,9 +1,10 @@
-﻿using AutoMapper.Execution;
+﻿using AutoMapper;
+using AutoMapper.Execution;
 using Libaray_Management_System.Data;
 using Libaray_Management_System.Entities;
 using Libaray_Management_System.Interfaces;
 using Libaray_Management_System.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,12 +13,15 @@ namespace Libaray_Management_System.Services
     public class MemberService : IMemberService
     {
         private readonly MemberDBContext _memberDBContext;
+        private readonly IMapper _mapper;
 
-        public MemberService(MemberDBContext memberDBContext)
+        public MemberService(MemberDBContext memberDBContext,IMapper mapper)
         {
-            _memberDBContext = memberDBContext; 
+            _memberDBContext = memberDBContext;
+            _mapper = mapper;
+
         }
-        
+
         public async Task<ActionResult<MemberModel>> AddMember(MemberModel memberModel)
         {
             var existingMenmber = await GetMemberByEmail(memberModel.Email);
@@ -25,19 +29,15 @@ namespace Libaray_Management_System.Services
             {
                 throw new InvalidOperationException("A member already exists with this email.");
             }
-            MemberEntity memberEntity = new MemberEntity();
-            memberEntity.FirstName = memberModel.FirstName; 
-            memberEntity.LastName = memberModel.LastName; 
-            memberEntity.Email = memberModel.Email;
-            memberEntity.Initialize(true, "Admin");
-            //use mapper
-             _memberDBContext.MemberEntity.Add(memberEntity);
-            _memberDBContext.SaveChanges();
+            var member = _mapper.Map<MemberEntity>(memberModel);
+       
+            member.Initialize(true, "Admin");
+             _memberDBContext.MemberEntity.Add(member);
+            var response = _memberDBContext.SaveChanges();
 
-            return memberModel;
+            return _mapper.Map<MemberModel>(response);
 
-            // OR: Option 2: Map memberEntity to MemberModel if necessary
-            // return Ok(Mapper.Map<MemberModel>(memberEntity));
+            
         }
 
         public async Task<IEnumerable<MemberModel>> GetAllMembers()
@@ -46,43 +46,38 @@ namespace Libaray_Management_System.Services
             var memberModels = new List<MemberModel>();
             foreach (var member in response)
             {
-                /*var visitorDTO = _mapper.Map<VisitorDTO>(visitor);*/
                 MemberModel memberModel = new MemberModel();
-                memberModel.FirstName = member.FirstName;
-                memberModel.LastName = member.LastName;
-                memberModel.Email = member.Email;   
-                memberModel.PhoneNo = member.PhoneNo;
-                memberModel.UId = member.UId;
+             
+                memberModel = _mapper.Map<MemberModel>(member);
                 memberModels.Add(memberModel);
             }
             return memberModels;
         }
 
-        public async Task<MemberModel> GetMemberByUId(int uId)
+        public async Task<MemberModel> GetMemberByMemberId(int memberId)
         {
-            var member = await _memberDBContext.MemberEntity.Where(q => q.UId==uId && q.Active && !q.Archived ).FirstOrDefaultAsync();
-            MemberModel memberModel = new MemberModel();
-            memberModel.FirstName = member.FirstName;
-            memberModel.LastName = member.LastName;
-            memberModel.Email = member.Email;
-            memberModel.PhoneNo = member.PhoneNo;
-            memberModel.UId = member.UId;
-            return memberModel;
+            var member = await _memberDBContext.MemberEntity.Where(q => q.MemberId==memberId && q.Active && !q.Archived ).FirstOrDefaultAsync();
+            if (member == null)
+            {
+                return null;
+            }
+           
+            return _mapper.Map<MemberModel>(member);
         }
         public async Task<MemberModel> GetMemberByEmail(string email)
         {
             var member = await _memberDBContext.MemberEntity.Where(q => q.Email == email && q.Active && !q.Archived).FirstOrDefaultAsync();
-            MemberModel memberModel = new MemberModel();
-            memberModel.FirstName = member.FirstName;
-            memberModel.LastName = member.LastName;
-            memberModel.Email = member.Email;
-            memberModel.PhoneNo = member.PhoneNo;
-            memberModel.UId = member.UId;
-            return memberModel;
+            if (member == null)
+            {
+                return null;
+            }
+            /*MemberModel memberModel = new MemberModel();*/
+
+            return _mapper.Map<MemberModel>(member);
         }
         public async Task<ActionResult<MemberModel>> UpdateMember(MemberModel memberModel)
         {
-            var existingMenmber = await _memberDBContext.MemberEntity.Where(q => q.UId == memberModel.UId && q.Active && !q.Archived).FirstOrDefaultAsync();
+            var existingMenmber = await _memberDBContext.MemberEntity.Where(q => q.MemberId == memberModel.MemberId && q.Active && !q.Archived).FirstOrDefaultAsync();
             if (existingMenmber != null)
             {
                 throw new InvalidOperationException("A member not found.");
@@ -92,18 +87,20 @@ namespace Libaray_Management_System.Services
             await _memberDBContext.SaveChangesAsync();
 
             existingMenmber.Initialize(false, "Admin");
-            existingMenmber.FirstName = memberModel.FirstName;
+            /*existingMenmber.FirstName = memberModel.FirstName;
             existingMenmber.LastName = memberModel.LastName;
             existingMenmber.Email = memberModel.Email;
-            existingMenmber.PhoneNo= memberModel.PhoneNo;
+            existingMenmber.PhoneNo= memberModel.PhoneNo;*/
+            existingMenmber = _mapper.Map<MemberEntity>(memberModel);
 
             _memberDBContext.MemberEntity.Add(existingMenmber);
             _memberDBContext.SaveChanges();
             return (memberModel);
         }
-        public async Task<IActionResult> DeleteMember(int uId)
+        public async Task<MemberModel> DeleteMember(int memberId)
         {
-            var memberToDelete = await _memberDBContext.MemberEntity.Where(q => q.UId == uId && q.Active && !q.Archived).FirstOrDefaultAsync();
+            var memberToDelete = await _memberDBContext.MemberEntity.Where(q => q.MemberId == memberId && q.Active && !q.Archived).FirstOrDefaultAsync();
+
             if (memberToDelete != null)
             {
                 throw new InvalidOperationException("A member not found.");
@@ -116,7 +113,8 @@ namespace Libaray_Management_System.Services
             memberToDelete.Archived = true;
             _memberDBContext.MemberEntity.Add(memberToDelete);
             _memberDBContext.SaveChanges();
-            return NoContent();
+
+            return _mapper.Map<MemberModel>(memberToDelete);
         }
     }
 }

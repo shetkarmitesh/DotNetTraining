@@ -4,16 +4,19 @@ using Libaray_Management_System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Libaray_Management_System.Migrations
+namespace Libaray_Management_System.Migrations.BookDB
 {
-    [DbContext(typeof(MemberDBContext))]
-    partial class MemberDBContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(BookDBContext))]
+    [Migration("20240622210105_BookMigration")]
+    partial class BookMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace Libaray_Management_System.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("Libaray_Management_System.Entities.MemberEntity", b =>
+            modelBuilder.Entity("Libaray_Management_System.Entities.BookEntity", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,6 +37,16 @@ namespace Libaray_Management_System.Migrations
                     b.Property<bool>("Archived")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BookStatus")
+                        .HasColumnType("int");
+
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -41,30 +54,19 @@ namespace Libaray_Management_System.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("ISBN")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int>("MemberId")
+                    b.Property<int>("Price")
                         .HasColumnType("int");
 
-                    b.Property<string>("Password")
+                    b.Property<DateTime>("PublishedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("longtext");
-
-                    b.Property<int>("Penalty")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PhoneNo")
-                        .HasColumnType("int");
 
                     b.Property<string>("UpdatedBy")
                         .IsRequired()
@@ -78,7 +80,7 @@ namespace Libaray_Management_System.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MemberEntity");
+                    b.ToTable("BookEntity");
                 });
 #pragma warning restore 612, 618
         }
