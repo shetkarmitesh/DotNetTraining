@@ -1,6 +1,7 @@
 ﻿using Employee_Management_System.DTOs;
 using Employee_Management_System.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Employee_Management_System.Interfaces
 {
@@ -11,5 +12,7 @@ namespace Employee_Management_System.Interfaces
         Task<EmployeeAdditionalDetailsDTO> GetAllEmployeeAdditionalDetailsById(string id);
         Task<EmployeeAdditionalDetailsDTO> UpdateEmployeeAdditionalDetails(EmployeeAdditionalDetailsDTO additionalDetailsDTO);
         Task<String> DeleteEmployeeAdditionalDetailsById(string id);
+
+        Task<IActionResult> AddEmployeeAdditionalDetailByMakePostRequest(EmployeeAdditionalDetailsDTO employeeAdditionalDetailsDTO)
     }
 }

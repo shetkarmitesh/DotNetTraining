@@ -1,6 +1,7 @@
 ﻿using Employee_Management_System.DTOs;
 using Employee_Management_System.Entities;
 using Microsoft.AspNetCore.Mvc;
+using VisitorSecurityClearanceSystem.DTOs;
 
 namespace Employee_Management_System.Interfaces
 {
@@ -12,5 +13,9 @@ namespace Employee_Management_System.Interfaces
  /*       Task<EmployeeBasicDetailsDTO> GetEmployeeBasicDetailsByUId(string uId);*/
         Task<EmployeeBasicDetailsDTO> UpdateEmployeeBasicDetails(EmployeeBasicDetailsDTO basicDetailsDTO);
         Task<String> DeleteEmployeeBasicDetailsById(string id);
+
+
+        Task<EmployeeBasicDetailsDTO> AddVisitorByMakePostRequest(VisitorDTO visitor);
+        Task <IEnumerable<EmployeeBasicDetailsDTO>> GetVisitorByMakePostRequest();
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Employee_Management_System.DTOs;
 using Employee_Management_System.Entities;
 using Employee_Management_System.Interfaces;
+using Employee_Management_System.ServiceFilters;
 using Microsoft.AspNetCore.Mvc;
+using VisitorSecurityClearanceSystem.DTOs;
 
 namespace Employee_Management_System.Controllers
 {
@@ -54,6 +56,45 @@ namespace Employee_Management_System.Controllers
         {
             var response = await _employeeBasicDetails.DeleteEmployeeBasicDetailsById(id);
             return response;
+        }
+
+
+
+/*
+        //makepostrequest
+
+        [HttpPost]
+
+        public async Task<IActionResult> AddEmployeeBasicDetailByMakePostRequest(EmployeeBasicDetailsDTO employeeBasicDetailsDTO)
+        {
+            var response = await _employeeBasicDetails.AddEmployeeBasicDetailByMakePostRequest(employeeBasicDetailsDTO);
+            return Ok(response);
+        }
+
+        //makegetrequest
+
+        [HttpGet]
+
+        public async Task<List<EmployeeBasicDetailsDTO>> GetEmployeeeBasicDetailByMakeGetRequest()
+        {
+            var response = await _employeeBasicDetails.GetEmployeeeBasicDetailByMakeGetRequest();
+            return response;
+        }*/
+
+        //adding visitor by microservises
+
+        [HttpPost]
+        public async Task<IActionResult> AddVisitorByMakePostRequest(VisitorDTO visitor)
+        {
+            var response = await _employeeBasicDetails.AddVisitorByMakePostRequest(visitor);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVisitorByMakePostRequest()
+        {
+            var response = await _employeeBasicDetails.GetVisitorByMakePostRequest();
+            return Ok(response);
         }
     }
 }

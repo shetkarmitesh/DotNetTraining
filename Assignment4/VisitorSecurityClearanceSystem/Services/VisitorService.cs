@@ -9,6 +9,7 @@ using System.Xml.Linq;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 namespace VisitorSecurityClearanceSystem.Services
 {
     public class VisitorService : IVisitorService
@@ -267,5 +268,21 @@ namespace VisitorSecurityClearanceSystem.Services
             return match;
         }
 
+
+        public async Task<VisitorDTO> AddVisitorByMakePostRequest(VisitorDTO visitor)
+        {
+            var serialObj = JsonConvert.SerializeObject(visitor);
+            var requestObj = await HttpClientHelper.MakePostRequest(Credentials.EmployeeUrl, Credentials.AddEmployeeEndPoint, serialObj);
+            var responseObj = JsonConvert.DeserializeObject<VisitorDTO>(requestObj);
+            return responseObj;
+
+        }
+
+        public async Task<IEnumerable<VisitorDTO>> GetAllEmployeesBasicDetails()
+        {
+            var responseString = await HttpClientHelper.MakeGetRequest(Credentials.EmployeeUrl, Credentials.GetAllEmployeesEndPoint);
+            var employees = JsonConvert.DeserializeObject<IEnumerable<VisitorDTO>>(responseString);
+            return employees;
+        }
     }
 }

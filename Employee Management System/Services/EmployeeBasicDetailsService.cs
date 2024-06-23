@@ -5,6 +5,8 @@ using Employee_Management_System.DTOs;
 using Employee_Management_System.Entities;
 using Employee_Management_System.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using VisitorSecurityClearanceSystem.DTOs;
 
 namespace Employee_Management_System.Services
 {
@@ -86,5 +88,24 @@ namespace Employee_Management_System.Services
             await _cosmosDBServices.AddEmployeeBasicDetails(employeeToDelete);
             return "Record Deleted Successfully...";
         }
+       
+
+        public async Task<EmployeeBasicDetailsDTO> AddVisitorByMakePostRequest(VisitorDTO visitor)
+        {
+            var serialObj = JsonConvert.SerializeObject(visitor);
+            var requestObj = await HttpClientHelper.MakePostRequest(Credentials.EmployeeUrl, Credentials.AddEmployeeEndPoint, serialObj);
+            var responseObj = JsonConvert.DeserializeObject<EmployeeBasicDetailsDTO>(requestObj);
+            return responseObj;
+
+        }
+
+
+        public async Task<IEnumerable<EmployeeBasicDetailsDTO>> GetVisitorByMakePostRequest()
+        {
+            var responseString = await HttpClientHelper.MakeGetRequest(Credentials.EmployeeUrl, Credentials.GetAllEmployeesEndPoint);
+            var employees = JsonConvert.DeserializeObject<IEnumerable<EmployeeBasicDetailsDTO>>(responseString);
+            return employees;
+        }
+
     }
 }

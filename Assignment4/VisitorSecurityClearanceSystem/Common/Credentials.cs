@@ -9,5 +9,9 @@
         public static string VisitorDocumnetType = "Visitor";
         public static string ApiKey = Environment.GetEnvironmentVariable("apiKey");
 
+        internal static readonly string EmployeeUrl = Environment.GetEnvironmentVariable("employeeUrl");
+        internal static readonly string AddEmployeeEndPoint = "/api/EmployeeBasicDetails/AddEmployeeBasicDetails";
+        internal static readonly string GetAllEmployeesEndPoint = "api/Employee/GetAllEmployeeBasicDetails";
+
     }
 }

@@ -171,6 +171,20 @@ namespace VisitorSecurityClearanceSystem.Controllers
             }
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> AddVisitorByMakePostRequest(VisitorDTO visitor)
+        {
+            var response = await _visitorService.AddVisitorByMakePostRequest(visitor);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllVisitorByMakeGetRequest()
+        {
+            var response = await _visitorService.GetAllEmployeesBasicDetails();
+            return Ok(response);
+        }
     }
 
 }

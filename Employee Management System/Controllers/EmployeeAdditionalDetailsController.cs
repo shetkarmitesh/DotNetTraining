@@ -53,5 +53,7 @@ namespace Employee_Management_System.Controllers
             var response = await _employeeAdditionalDetails.DeleteEmployeeAdditionalDetailsById(id);
             return response;
         }
+
+     
     }
 }

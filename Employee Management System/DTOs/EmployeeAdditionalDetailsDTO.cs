@@ -12,4 +12,5 @@ namespace Employee_Management_System.DTOs
         public PersonalDetails_ PersonalDetails { get; set; }
         public IdentityInfo_ IdentityInformation { get; set; }
     }
+   
 }
