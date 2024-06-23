@@ -13,6 +13,5 @@ namespace Employee_Management_System.Interfaces
         Task<EmployeeAdditionalDetailsDTO> UpdateEmployeeAdditionalDetails(EmployeeAdditionalDetailsDTO additionalDetailsDTO);
         Task<String> DeleteEmployeeAdditionalDetailsById(string id);
 
-        Task<IActionResult> AddEmployeeAdditionalDetailByMakePostRequest(EmployeeAdditionalDetailsDTO employeeAdditionalDetailsDTO)
     }
 }
