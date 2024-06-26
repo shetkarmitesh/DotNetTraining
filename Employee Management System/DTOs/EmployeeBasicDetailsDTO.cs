@@ -18,4 +18,5 @@ namespace Employee_Management_System.DTOs
         public string ReportingManagerName { get; set; }
         public Address Address { get; set; }
     }
+   
 }

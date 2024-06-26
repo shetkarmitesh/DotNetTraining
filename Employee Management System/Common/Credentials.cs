@@ -11,5 +11,7 @@
         internal static readonly string AddEmployeeEndPoint = "/api/EmployeeBasicDetails/AddBasicDetail";
         internal static readonly string GetAllEmployeesEndPoint = "api/Employee/GetAllEmployees";
 
+
+
     }
 }

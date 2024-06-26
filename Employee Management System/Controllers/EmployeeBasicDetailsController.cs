@@ -1,6 +1,8 @@
 ﻿using Employee_Management_System.DTOs;
 using Employee_Management_System.Entities;
 using Employee_Management_System.Interfaces;
+using Employee_Management_System.ServiceFilter;
+using Employee_Management_System.Services;
 using Microsoft.AspNetCore.Mvc;
 using VisitorSecurityClearanceSystem.DTOs;
 
@@ -94,6 +96,21 @@ namespace Employee_Management_System.Controllers
         {
             var response = await _employeeBasicDetails.GetVisitorByMakePostRequest();
             return Ok(response);
+        }
+        //MakePost
+        [HttpPost]
+        public async Task<IActionResult> AddEmployeeBasicDetailsByMakePostRequest(EmployeeBasicDetailsDTO employeeBasicDetailsDto)
+        {
+            var response = await _employeeBasicDetails.AddEmployeeBasicDetailsByMakePostRequest(employeeBasicDetailsDto);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        [ServiceFilter(typeof(BuildEmployeeFilter))]
+        public async Task<EmployeeFilterCriteria> GetAllEmployeesByPagination(EmployeeFilterCriteria employeeFilterCriteria)
+        {
+            var response = await _employeeBasicDetails.GetAllEmployeesByPagination(employeeFilterCriteria);
+            return response;
         }
     }
 }

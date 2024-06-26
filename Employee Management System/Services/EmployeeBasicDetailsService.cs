@@ -90,22 +90,76 @@ namespace Employee_Management_System.Services
         }
        
 
-        public async Task<EmployeeBasicDetailsDTO> AddVisitorByMakePostRequest(VisitorDTO visitor)
+        public async Task<VisitorDTO> AddVisitorByMakePostRequest(VisitorDTO visitor)
         {
             var serialObj = JsonConvert.SerializeObject(visitor);
             var requestObj = await HttpClientHelper.MakePostRequest(Credentials.EmployeeUrl, Credentials.AddEmployeeEndPoint, serialObj);
-            var responseObj = JsonConvert.DeserializeObject<EmployeeBasicDetailsDTO>(requestObj);
+            var responseObj = JsonConvert.DeserializeObject<VisitorDTO>(requestObj);
             return responseObj;
 
         }
 
 
-        public async Task<IEnumerable<EmployeeBasicDetailsDTO>> GetVisitorByMakePostRequest()
+        public async Task<IEnumerable<VisitorDTO>> GetVisitorByMakePostRequest()
+        {
+            var responseString = await HttpClientHelper.MakeGetRequest(Credentials.EmployeeUrl, Credentials.GetAllEmployeesEndPoint);
+            var employees = JsonConvert.DeserializeObject<IEnumerable<VisitorDTO>>(responseString);
+            return employees;
+        }
+
+
+        public async Task<EmployeeBasicDetailsDTO> AddEmployeeBasicDetailsByMakePostRequest(EmployeeBasicDetailsDTO employeeBasicDetailsDto)
+        {
+            var serialObj = JsonConvert.SerializeObject(employeeBasicDetailsDto);
+            var requestObj = await HttpClientHelper.MakePostRequest(Credentials.EmployeeUrl, Credentials.AddEmployeeEndPoint, serialObj);
+            var responseObj = JsonConvert.DeserializeObject<EmployeeBasicDetailsDTO>(requestObj);
+            return responseObj;
+
+        }
+        public async Task<IEnumerable<EmployeeBasicDetailsDTO>> GetEmployeeBasicDetailsByMakeGetRequest()
         {
             var responseString = await HttpClientHelper.MakeGetRequest(Credentials.EmployeeUrl, Credentials.GetAllEmployeesEndPoint);
             var employees = JsonConvert.DeserializeObject<IEnumerable<EmployeeBasicDetailsDTO>>(responseString);
             return employees;
         }
 
+        public async Task<EmployeeFilterCriteria> GetAllEmployeesByPagination(EmployeeFilterCriteria employeeFilterCriteria)
+        {
+            EmployeeFilterCriteria response = new EmployeeFilterCriteria();
+
+            var checkFilter = employeeFilterCriteria.Filters.Any(x => x.fieldName == "role");
+            var role = "";
+            if (checkFilter)
+            {
+                role = employeeFilterCriteria.Filters.Find(a => a.fieldName == "role").fieldValue.FirstOrDefault();
+            }
+
+            var employees = await GetAllEmployeeBasicDetails();
+
+            var filterRecords = string.IsNullOrEmpty(role) ? employees : employees.Where(a => a.Role == role);
+
+            var employeeList = filterRecords.ToList();
+
+            response.TotalCount = employeeList.Count;
+
+            response.page = employeeFilterCriteria.page;
+            response.pageSize = employeeFilterCriteria.pageSize;
+
+            if (response.page < 1) response.page = 1;
+            if (response.pageSize < 1) response.pageSize = 10;
+            var skip = response.pageSize * (response.page - 1);
+
+            var pagedRecords = employeeList.Skip(skip).Take(response.pageSize).ToList();
+
+            response.Employees = pagedRecords;
+
+            return response;
+        }
+
+        public async Task<List<EmployeeBasicDetailsDTO>> GetAllEmployeeBasicDetailsByRole(string role)
+        {
+            var allEmployees = await GetAllEmployeeBasicDetails();
+            return allEmployees.FindAll(e => e.Role == role);
+        }
     }
 }
