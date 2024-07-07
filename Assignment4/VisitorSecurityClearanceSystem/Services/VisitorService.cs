@@ -272,17 +272,17 @@ namespace VisitorSecurityClearanceSystem.Services
         public async Task<VisitorDTO> AddVisitorByMakePostRequest(VisitorDTO visitor)
         {
             var serialObj = JsonConvert.SerializeObject(visitor);
-            var requestObj = await HttpClientHelper.MakePostRequest(Credentials.EmployeeUrl, Credentials.AddEmployeeEndPoint, serialObj);
+            var requestObj = await HttpClientHelper.MakePostRequest(Credentials.VisitorUrl, Credentials.AddVisitorEndPoint, serialObj);
             var responseObj = JsonConvert.DeserializeObject<VisitorDTO>(requestObj);
             return responseObj;
 
         }
 
-        public async Task<IEnumerable<VisitorDTO>> GetAllEmployeesBasicDetails()
+        public async Task<IEnumerable<VisitorDTO>> GetAllVisitorByMakeGetRequest()
         {
-            var responseString = await HttpClientHelper.MakeGetRequest(Credentials.EmployeeUrl, Credentials.GetAllEmployeesEndPoint);
-            var employees = JsonConvert.DeserializeObject<IEnumerable<VisitorDTO>>(responseString);
-            return employees;
+            var responseString = await HttpClientHelper.MakeGetRequest(Credentials.VisitorUrl, Credentials.GetAllVisitorEndPoint);
+            var visitors = JsonConvert.DeserializeObject<IEnumerable<VisitorDTO>>(responseString);
+            return visitors;
         }
     }
 }

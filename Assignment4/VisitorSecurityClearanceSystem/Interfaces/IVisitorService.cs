@@ -14,7 +14,7 @@ namespace VisitorSecurityClearanceSystem.Interfaces
         Task<string> DeleteVisitor(string uId);
 
         Task<List<VisitorDTO>> SearchVisitors(string name = null, string company = null, DateTime? fromDate = null, DateTime? toDate = null, bool? pass = null);
-        Task<IEnumerable<VisitorDTO>> GetAllEmployeesBasicDetails();
+        Task<IEnumerable<VisitorDTO>> GetAllVisitorByMakeGetRequest();
         Task<VisitorDTO> AddVisitorByMakePostRequest(VisitorDTO visitor);
     }
 }

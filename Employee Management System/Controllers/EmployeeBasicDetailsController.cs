@@ -103,6 +103,13 @@ namespace Employee_Management_System.Controllers
         {
             var response = await _employeeBasicDetails.AddEmployeeBasicDetailsByMakePostRequest(employeeBasicDetailsDto);
             return Ok(response);
+        } 
+        //MakeGet
+        [HttpGet]
+        public async Task<IActionResult> GetAllEmployeeBasicDetailsByMakeGetRequest()
+        {
+            var response = await _employeeBasicDetails.GetEmployeeBasicDetailsByMakeGetRequest();
+            return Ok(response);
         }
 
         [HttpPost]

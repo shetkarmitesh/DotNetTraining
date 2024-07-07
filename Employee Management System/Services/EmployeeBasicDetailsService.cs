@@ -93,7 +93,7 @@ namespace Employee_Management_System.Services
         public async Task<VisitorDTO> AddVisitorByMakePostRequest(VisitorDTO visitor)
         {
             var serialObj = JsonConvert.SerializeObject(visitor);
-            var requestObj = await HttpClientHelper.MakePostRequest(Credentials.EmployeeUrl, Credentials.AddEmployeeEndPoint, serialObj);
+            var requestObj = await HttpClientHelper.MakePostRequest(Credentials.VisitorUrl, Credentials.AddVisitorEndPoint, serialObj);
             var responseObj = JsonConvert.DeserializeObject<VisitorDTO>(requestObj);
             return responseObj;
 
@@ -102,7 +102,7 @@ namespace Employee_Management_System.Services
 
         public async Task<IEnumerable<VisitorDTO>> GetVisitorByMakePostRequest()
         {
-            var responseString = await HttpClientHelper.MakeGetRequest(Credentials.EmployeeUrl, Credentials.GetAllEmployeesEndPoint);
+            var responseString = await HttpClientHelper.MakeGetRequest(Credentials.VisitorUrl, Credentials.GetAllVisitorEndPoint);
             var employees = JsonConvert.DeserializeObject<IEnumerable<VisitorDTO>>(responseString);
             return employees;
         }

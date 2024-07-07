@@ -3,6 +3,8 @@ using Employee_Management_System.Entities;
 using Employee_Management_System.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
 
 namespace Employee_Management_System.Controllers
 {
@@ -125,7 +127,16 @@ namespace Employee_Management_System.Controllers
                 worksheet.Cells[rowIndex, 8].Value = "Date Of Birth";
                 worksheet.Cells[rowIndex, 9].Value = "Date of Joining";
 
-                rowIndex=2;
+
+                //header styling 
+                using (var range = worksheet.Cells[1, 1, 1, 9])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.Fill.PatternType =ExcelFillStyle.Solid;
+                    range.Style.Fill.BackgroundColor.SetColor(Color.LightGreen);
+
+                }
+                    rowIndex = 2;
                 foreach (var data in employeesData)
                 {
                     worksheet.Cells[rowIndex, 1].Value = rowIndex-1;

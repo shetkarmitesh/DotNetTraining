@@ -182,7 +182,7 @@ namespace VisitorSecurityClearanceSystem.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllVisitorByMakeGetRequest()
         {
-            var response = await _visitorService.GetAllEmployeesBasicDetails();
+            var response = await _visitorService.GetAllVisitorByMakeGetRequest();
             return Ok(response);
         }
     }
